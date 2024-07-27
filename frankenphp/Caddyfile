@@ -1,14 +1,17 @@
 {
 	{$CADDY_GLOBAL_OPTIONS}
+
     http_port 8080
     auto_https off
 
 	frankenphp {
 		{$FRANKENPHP_CONFIG}
 	}
+
 	servers :8080 {
         protocols h1 h2c
     }
+
     order php_server before file_server
 }
 
