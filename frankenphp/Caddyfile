@@ -1,0 +1,29 @@
+{
+	{$CADDY_GLOBAL_OPTIONS}
+    http_port 8080
+    auto_https off
+
+	frankenphp {
+		{$FRANKENPHP_CONFIG}
+	}
+	servers :8080 {
+        protocols h1 h2c
+    }
+    order php_server before file_server
+}
+
+{$CADDY_EXTRA_CONFIG}
+
+{$SERVER_NAME:localhost} {
+
+	root * /app/public/
+	encode zstd br gzip
+    log
+
+	{$CADDY_SERVER_EXTRA_DIRECTIVES}
+
+	# Disable Topics tracking if not enabled explicitly: https://github.com/jkarlin/topics
+	header ?Permissions-Policy "browsing-topics=()"
+    php_server
+
+}
