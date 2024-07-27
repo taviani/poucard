@@ -51,7 +51,7 @@ CMD [ "frankenphp", "run", "--config", "/etc/caddy/Caddyfile" ]
 # Dev FrankenPHP image
 FROM frankenphp_base AS frankenphp_dev
 
-ENV APP_ENV=dev XDEBUG_MODE=off HOST=0.0.0.0
+ENV APP_ENV=dev XDEBUG_MODE=off
 
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
@@ -69,6 +69,11 @@ FROM frankenphp_base AS frankenphp_prod
 
 ENV APP_ENV=prod
 ENV FRANKENPHP_CONFIG="import worker.Caddyfile"
+
+ENV CADDY_GLOBAL_OPTIONS="http_port 8080 \
+    https_port 8443 \
+	auto_https off \
+    debug"
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
@@ -90,5 +95,3 @@ RUN set -eux; \
 	composer dump-env prod; \
 	composer run-script --no-dev post-install-cmd; \
 	chmod +x bin/console; sync;
-
-EXPOSE 8080
